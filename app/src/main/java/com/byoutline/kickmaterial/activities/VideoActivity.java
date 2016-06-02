@@ -74,6 +74,7 @@ public class VideoActivity extends KickMaterialBaseActivity {
         String altVideoUrl = args.getString(BUNDLE_ALT_VIDEO_URL);
         String webviewUrl = args.getString(BUNDLE_WEBVIEW_URL);
         Uri uri = Uri.parse(videoUrl);
+        // INote: 5/31/16  videoView use
         videoView.setMediaController(new VideoController(this, webviewUrl));
         videoView.setVideoURI(uri);
         videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {

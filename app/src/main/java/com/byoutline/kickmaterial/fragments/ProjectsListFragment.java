@@ -10,16 +10,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.byoutline.cachedfield.CachedFieldWithArg;
 import com.byoutline.cachedfield.FieldState;
 import com.byoutline.cachedfield.FieldStateListener;
 import com.byoutline.kickmaterial.KickMaterialApp;
 import com.byoutline.kickmaterial.R;
+import com.byoutline.kickmaterial.activities.CategoriesListActivity;
 import com.byoutline.kickmaterial.activities.ProjectDetailsActivity;
 import com.byoutline.kickmaterial.adapters.ProjectClickListener;
 import com.byoutline.kickmaterial.adapters.ProjectsAdapter;
@@ -28,7 +31,11 @@ import com.byoutline.kickmaterial.events.CategoriesFetchedEvent;
 import com.byoutline.kickmaterial.events.DiscoverProjectsFetchedErrorEvent;
 import com.byoutline.kickmaterial.events.DiscoverProjectsFetchedEvent;
 import com.byoutline.kickmaterial.managers.LoginManager;
-import com.byoutline.kickmaterial.model.*;
+import com.byoutline.kickmaterial.model.Category;
+import com.byoutline.kickmaterial.model.DiscoverQuery;
+import com.byoutline.kickmaterial.model.DiscoverResponse;
+import com.byoutline.kickmaterial.model.DiscoverType;
+import com.byoutline.kickmaterial.model.Project;
 import com.byoutline.kickmaterial.utils.LUtils;
 import com.byoutline.kickmaterial.views.EndlessRecyclerView;
 import com.byoutline.observablecachedfield.RetrofitHelper;
@@ -37,12 +44,18 @@ import com.byoutline.secretsauce.utils.ViewUtils;
 import com.software.shell.fab.ActionButton;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
 import org.parceler.Parcels;
-import timber.log.Timber;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import timber.log.Timber;
 
 import static com.byoutline.kickmaterial.activities.CategoriesListActivity.ARG_CATEGORY;
 import static com.byoutline.kickmaterial.activities.CategoriesListActivity.launch;
@@ -122,6 +135,7 @@ public class ProjectsListFragment extends KickMaterialFragment implements Projec
         setUpAdapters();
         setUpListeners();
         configureSwipeRefresh();
+//        showBackButtonInActionbar();
     }
 
     public void configureSwipeRefresh() {
@@ -130,6 +144,7 @@ public class ProjectsListFragment extends KickMaterialFragment implements Projec
         swipeRefreshLayout.setOnRefreshListener(() -> {
             // Throw away all loaded categories and start over.
             int pageToRefresh = 1;
+            // INote: 5/30/16 the generalization that uses in here, is very obscure to understand
             discoverField.refresh(DiscoverQuery.getDiscoverQuery(category, pageToRefresh));
         });
     }
@@ -142,7 +157,7 @@ public class ProjectsListFragment extends KickMaterialFragment implements Projec
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                // INote: 5/30/16  Fab button animation
                 if (dy > actionbarScrollPoint) {
                     hostActivity.showActionbar(false, true);
                     if (!showCategoriesFab.isHidden()) {
@@ -152,7 +167,6 @@ public class ProjectsListFragment extends KickMaterialFragment implements Projec
 
                 if (dy < actionbarScrollPoint * (-1)) {
                     hostActivity.showActionbar(true, true);
-
                     if (showCategoriesFab.isHidden()) {
                         showCategoriesFab.show();
                     }
@@ -354,4 +368,6 @@ public class ProjectsListFragment extends KickMaterialFragment implements Projec
     public synchronized boolean hasMoreDataAndNotLoading() {
         return (!(discoverField.getState() == FieldState.CURRENTLY_LOADING) && hasMore());
     }
+
+
 }

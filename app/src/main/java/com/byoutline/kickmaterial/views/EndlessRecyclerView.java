@@ -48,7 +48,7 @@ public class EndlessRecyclerView extends RecyclerView {
                 if (scrollListener != null) {
                     scrollListener.onScrolled(recyclerView, dx, dy);
                 }
-
+                // INote: 5/30/16  Load more handler
                 if (endlessScrollListener != null && dy > SCROLL_THRESHOLD) {
                     visibleItemCount = getChildCount();
                     totalItemCount = getLayoutManager().getItemCount();

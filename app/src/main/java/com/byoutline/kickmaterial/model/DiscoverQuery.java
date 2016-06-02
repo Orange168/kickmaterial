@@ -44,13 +44,18 @@ public class DiscoverQuery extends BaseObservable {
         return new DiscoverQuery(params, DiscoverType.DISCOVER_CATEGORY);
     }
 
-    public static DiscoverQuery getDiscoverSearch(@Nonnull String searchTerm, @Nullable Integer categoryId, @Nullable Integer page, @Nonnull SortTypes sort) {
+    public static DiscoverQuery getDiscoverSearch(@Nonnull String searchTerm,
+                                                  @Nullable Integer categoryId,
+                                                  @Nullable Integer page, @Nonnull SortTypes sort) {
         Map<String, String> params = getDiscoverCategoryMap(categoryId, page, PER_PAGE, sort);
         params.put("term", searchTerm);
         return new DiscoverQuery(params, DiscoverType.SEARCH);
     }
 
-    private static Map<String, String> getDiscoverCategoryMap(@Nullable Integer categoryId, @Nullable Integer page, @Nullable Integer perPage, @Nullable SortTypes sort) {
+    private static Map<String, String> getDiscoverCategoryMap(@Nullable Integer categoryId,
+                                                              @Nullable Integer page,
+                                                              @Nullable Integer perPage,
+                                                              @Nullable SortTypes sort) {
         Map<String, String> params = new HashMap<>();
         if (categoryId != null) {
             params.put("category_id", Integer.toString(categoryId));

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
+
+import com.byoutline.kickmaterial.KickMaterialApp;
 import com.byoutline.kickmaterial.R;
 import com.byoutline.kickmaterial.fragments.ProjectsListFragment;
 import com.byoutline.kickmaterial.managers.DataManager;
@@ -29,7 +31,6 @@ public class MainActivity extends KickMaterialBaseActivity {
                     .add(R.id.container, ProjectsListFragment.newInstance(DataManager.getCategoryAll()))
                     .commit();
         }
-
 
 //        setExitSharedElementCallback(new SharedElementCallback() {
 //            @Override
@@ -57,7 +58,7 @@ public class MainActivity extends KickMaterialBaseActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
 //        }
-//        return super.onCreateOptionsMenu(menu);
+//        return super.onCreateOptionsMenu(menu);/
     }
 
     @Override

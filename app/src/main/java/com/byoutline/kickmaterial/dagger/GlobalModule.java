@@ -3,6 +3,7 @@ package com.byoutline.kickmaterial.dagger;
 import android.content.SharedPreferences;
 import com.byoutline.cachedfield.CachedField;
 import com.byoutline.cachedfield.CachedFieldWithArg;
+import com.byoutline.cachedfield.ProviderWithArg;
 import com.byoutline.kickmaterial.KickMaterialApp;
 import com.byoutline.kickmaterial.api.KickMaterialRequestInterceptor;
 import com.byoutline.kickmaterial.api.KickMaterialService;
@@ -25,6 +26,8 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import org.joda.time.DateTime;
+
+import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
@@ -80,16 +83,17 @@ public class GlobalModule {
     @Provides
     @GlobalScope
     public KickMaterialService providesKickMaterialService(KickMaterialRequestInterceptor requestInterceptor, Gson gson) {
+        // INote: 5/23/16 important code createService user local server to mock
         return createService("http://localhost:8099", KickMaterialService.class, requestInterceptor, gson);
     }
 
-    private <T> T createService(String endpoint, Class<T> serviceClass, @Nullable KickMaterialRequestInterceptor requestInterceptor, Gson gson) {
+    private <T> T createService(String endpoint, Class<T> serviceClass,
+                                @Nullable KickMaterialRequestInterceptor requestInterceptor, Gson gson) {
 
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         if (requestInterceptor != null) {
             clientBuilder.addInterceptor(requestInterceptor);
         }
-
 
         Retrofit.Builder builder = new Retrofit.Builder();
 
@@ -144,10 +148,22 @@ public class GlobalModule {
     @GlobalScope
     public ObservableCachedFieldWithArg<ProjectDetails, ProjectIdAndSignature>
     provideProjectDetails(KickMaterialService service) {
+
+                new OttoObservableCachedFieldWithArgBuilder<ProjectDetails, ProjectIdAndSignature>()
+                .withValueProvider(apiValueProv(new ProviderWithArg<Call<ProjectDetails>, ProjectIdAndSignature>() {
+                    @Override
+                    public Call<ProjectDetails> get(ProjectIdAndSignature input) {
+                        return service.getProjectDetails(input.id(), input.queryParams());
+                    }
+                })).withSuccessEvent(new ProjectDetailsFetchedEvent())
+                .withResponseErrorEvent(new ProjectDetailsFetchingFailedEvent())
+                .build();
+
         return new OttoObservableCachedFieldWithArgBuilder<ProjectDetails, ProjectIdAndSignature>()
                 .withValueProvider(apiValueProv(input -> service.getProjectDetails(input.id(), input.queryParams())))
                 .withSuccessEvent(new ProjectDetailsFetchedEvent())
                 .withResponseErrorEvent(new ProjectDetailsFetchingFailedEvent())
                 .build();
+
     }
 }

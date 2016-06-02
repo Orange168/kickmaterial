@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting;
 import com.byoutline.androidstubserver.AndroidStubServer;
 import com.byoutline.kickmaterial.dagger.*;
 import com.byoutline.kickmaterial.managers.AccessTokenProvider;
+import com.byoutline.kickmaterial.model.CreatorUrls;
 import com.byoutline.mockserver.NetworkType;
 import com.byoutline.observablecachedfield.RetrofitHelper;
 import com.byoutline.secretsauce.BaseApp;
@@ -26,7 +27,9 @@ public class KickMaterialApp extends BaseApp {
         }
         AndroidStubServer.start(this, NetworkType.UMTS);
         RetrofitHelper.MSG_DISPLAYER = msg -> ViewUtils.showToast(msg, true);
+
         resetComponents();
+
     }
 
 
@@ -35,6 +38,7 @@ public class KickMaterialApp extends BaseApp {
         return BuildConfig.DEBUG;
     }
 
+    // INote: 5/23/16  unkown code VisibleForTesting
     @VisibleForTesting
     public synchronized void setComponents(GlobalComponent mainComponent, AppComponent appComponent) {
         component = mainComponent;

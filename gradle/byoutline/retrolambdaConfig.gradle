@@ -1,6 +1,7 @@
 apply plugin: RetrolambdaDeps
 
 retrolambda {
+    print '{} retrolamba----------------------------------------------------'
     def jdkHome = 'JAVA8_HOME'
     def oldJdkHome = 'JAVA7_HOME'
     if (System.getenv(jdkHome) == null || System.getenv(oldJdkHome) == null) {
@@ -17,6 +18,7 @@ public final class RetrolambdaDeps implements Plugin<Project>{
 
     @Override
     void apply(Project project) {
+        print 'apply in the RetrolambdaDeps ------------------------------'
         addDependencies(project)
         applyPlugins(project)
     }

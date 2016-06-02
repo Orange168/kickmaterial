@@ -66,8 +66,8 @@ android {
 
     lintOptions {
         lintConfig file("lint.xml")
-	textOutput "stdout"
-	textReport true
+        textOutput "stdout"
+        textReport true
     }
 
     packagingOptions {

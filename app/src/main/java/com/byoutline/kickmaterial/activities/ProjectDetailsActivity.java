@@ -101,6 +101,7 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
         ButterKnife.bind(this);
         KickMaterialApp.component.inject(this);
         binding.setProject(projectDetailsField.observable());
+        // INote: 5/30/16 new knowledge.
         supportPostponeEnterTransition();
         handleArguments();
 
@@ -119,7 +120,8 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
         titleFontMinSize = getResources().getDimensionPixelSize(R.dimen.font_16);
         imageHeight = getResources().getDimensionPixelSize(R.dimen.project_details_photo_height);
         imageWidth = (int) (imageHeight * ProjectsAdapter.IMAGE_RATIO);
-        binding.detailsContainer.startAnimation(AnimationUtils.loadAnimation(ProjectDetailsActivity.this, R.anim.slide_from_bottom));
+        binding.detailsContainer.startAnimation(AnimationUtils.loadAnimation(ProjectDetailsActivity.this,
+                R.anim.slide_from_bottom));
         loadProjectData();
         launchPostTransitionAnimations();
     }
@@ -158,6 +160,7 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
                 binding.projectItemBigDaysLeft, binding.projectItemTimeLeftTypeTv, project);
 
         // TODO: animate elevation on scroll.
+        // INote: 5/31/16  ViewCompat.setElevation
         ViewCompat.setElevation(binding.detailsContainer, ViewUtils.convertDpToPixel(4, ProjectDetailsActivity.this));
 
         loadProjectPhoto();
@@ -173,6 +176,7 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
                 binding.projectPhotoIv.setImageBitmap(bitmap);
             }
         }
+        // INote: 5/31/16  Material method supportStartPostponedEnterTransition
         // Make sure that transition starts soon even if image is not ready.
         binding.projectPhotoIv.postDelayed(this::supportStartPostponedEnterTransition, MAX_TRANSITION_DELAY);
         Picasso.with(this)
@@ -199,6 +203,7 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
 
     private void animateAlphaAfterTransition(final View view) {
         view.setAlpha(0);
+        // INote: 5/31/16  Material method EnterSharedElementCallback
         ActivityCompat.setEnterSharedElementCallback(this, new SharedElementCallback() {
             @Override
             public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -318,12 +323,14 @@ public class ProjectDetailsActivity extends KickMaterialBaseActivity implements 
 
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
+        // INote: 5/31/16  Important code
         int scrollY = (int) (binding.scrollView.getScrollY() * 0.6f);
         float newTitleLeft = Math.min(maxTitlesMarginLeft, scrollY * 0.5f);
         float newTitleTop = Math.min(maxTitlesMarginTop, scrollY);
         int newTitlePaddingRight = Math.min(maxTitlePaddingRight, scrollY);
 
-        binding.projectTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.max(titleFontMaxSize - scrollY * 0.05f, titleFontMinSize));
+        binding.projectTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                Math.max(titleFontMaxSize - scrollY * 0.05f, titleFontMinSize));
 //        binding.projectTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,moveBase(minTitlesMarginTop,maxTitlesMarginTop,titleFontMaxSize,titleFontMinSize,scrollY));
 
         binding.projectTitleTv.setPadding(0, 0, newTitlePaddingRight, 0);

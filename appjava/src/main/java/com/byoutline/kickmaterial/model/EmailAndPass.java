@@ -14,4 +14,5 @@ public abstract class EmailAndPass {
     public abstract String email();
 
     public abstract String password();
+
 }

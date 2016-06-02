@@ -36,6 +36,7 @@ public final class PaletteAndAplaTransformation implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {
         // Calculate palette from original bitmap.
+        // INote: 5/31/16  Palette.From
         Palette palette = Palette.from(source).generate();
         // Add apla overlay to bitmap.
         Bitmap result = aplaTransformation.transform(source);

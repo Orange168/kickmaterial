@@ -14,7 +14,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
-import butterknife.ButterKnife;
+
 import com.byoutline.kickmaterial.R;
 import com.byoutline.kickmaterial.fragments.KickMaterialFragment;
 import com.byoutline.kickmaterial.utils.LUtils;
@@ -26,10 +26,13 @@ import com.byoutline.secretsauce.utils.ViewUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 /**
  * @author Pawel Karczewski <pawel.karczewski at byoutline.com> on 2015-01-03
  */
-public abstract class KickMaterialBaseActivity extends BaseAppCompatActivity implements KickMaterialFragment.HostActivity, NavigationDrawerFragment.NavigationDrawerCallbacks {
+public abstract class KickMaterialBaseActivity extends BaseAppCompatActivity
+        implements KickMaterialFragment.HostActivity, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final int HEADER_HIDE_ANIM_DURATION = 300;
     private int actionBarAutoHideSensitivity = 0;
@@ -119,7 +122,7 @@ public abstract class KickMaterialBaseActivity extends BaseAppCompatActivity imp
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                // INote: 5/26/16  suspected floating button animation
                 int firstVisibleItem = ((GridLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                 onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
                         lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
@@ -178,7 +181,7 @@ public abstract class KickMaterialBaseActivity extends BaseAppCompatActivity imp
 
     protected void onActionBarAutoShowOrHide(boolean shown) {
         View view = toolbar;
-
+        // INote: 5/26/16 Toolbar animation
         if (shown) {
             view.animate()
                     .translationY(0)
